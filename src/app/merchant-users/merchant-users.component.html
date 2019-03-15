@@ -1,0 +1,8 @@
+<h2>My Merchants</h2>
+<ul class="merchantUsers">
+    <li *ngFor="let merchantUser of merchantUsers" [class.selected]="merchantUser === selectedMerchantUser" (click)="onSelect(merchantUser)">
+        <span class="badge">{{merchantUser.userID}}</span> {{merchantUser.userType}}
+    </li>
+</ul>
+
+<!-- <app-merchant-detail [merchantUserDetail]='selectedMerchantUser' ></app-merchant-detail> -->

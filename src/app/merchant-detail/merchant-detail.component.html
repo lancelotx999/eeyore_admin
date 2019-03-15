@@ -1,0 +1,11 @@
+<div *ngIf="merchantUserDetail">
+    <h2>{{merchantUserDetail.userID}} Merchant Details</h2>
+    <div><span>id: </span>{{merchantUserDetail.userID}}</div>
+    <div>
+      <label>Merchant ID:
+        <input [(ngModel)]="merchantUserDetail.merchantID" placeholder="name">
+      </label>
+    </div>
+</div>
+
+<button (click)="goBack()">go back</button>
