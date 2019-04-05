@@ -1,0 +1,39 @@
+<div class="" *ngIf="selectedConversation; else blankConversation">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <b>{{ selectedConversation.topic }}</b>
+                <div class="" *ngFor="let user of selectedConversation.users">
+                    <b>{{user}}</b>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row" *ngFor="let message of selectedConversation.messages" >
+                    <div class="col-md-12">
+                        {{message.senderID}}: {{ message.content }}
+                    </div>
+                </div>
+            </div>
+        </div>
+            <form #f="ngForm" (ngSubmit)="submitMessage(f)" class="row">
+                <div class="col-md-10">
+                    <input name="message" id="message" ngModel>
+                </div>
+                <div class="col-md-2">
+                    <button>Submit</button>
+                </div>
+                <!-- <input name="first" ngModel required #first="ngModel"> -->
+            </form>
+    </div>
+</div>
+<ng-template #blankConversation>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                Please Select A Conversation
+            </div>
+        </div>
+    </div>
+</ng-template>
