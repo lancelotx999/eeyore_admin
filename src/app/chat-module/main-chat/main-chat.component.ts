@@ -38,8 +38,8 @@ export class MainChatComponent implements OnInit {
 
     receiveSelectedConversation($event) {
         this.selectedConversation = $event;
-        console.log(this.selectedConversation);
-        console.log('receiveSelectedConversation executed.');
+        // console.log(this.selectedConversation);
+        // console.log('receiveSelectedConversation executed.');
     }
 
 

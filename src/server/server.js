@@ -6,7 +6,7 @@
 /* ExpressJS */
 const express = require('express');
 const bodyParser = require('body-parser');
-// const cors = require('cors');
+const cors = require('cors');
 
 /* JWT & Bcrypt */
 const jwt = require('jsonwebtoken');
@@ -17,12 +17,13 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
+app.use(cors());
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// require('./router/router')(app);
-//
+require('./router/router')(app);
+
 const Role = require('./model/role.model');
 const User = require('./model/user.model');
 const Conversation = require('./model/conversation.model');
@@ -37,7 +38,7 @@ const mongoose = require('mongoose');
 mongoose.connect(config.url, config.options)
     .then(() => {
         console.log("Connecting to MongoDB.");
-        // initial();
+        initial();
 
     })
     .catch(err => {
@@ -128,23 +129,52 @@ io.on('connection', function (socket) {
         // });
     });
 
-    //ChatService Function - populateDummyData
     socket.on('populateDummyData-start', function(){
         console.log('populateDummyData-start started.');
 
+        // var populateUsers = [
+        //     { userID: '4308131', userName: '4308131', firstName: 'Sean', lastName: 'Lee', email: '4308131@eeyore.com', password: '940228', oAuth: 'test', roles: 'Admin' },
+        //     { userID: '4308111', userName: 'Mr. Nice', firstName: 'John', lastName: 'Marco', email: '4308111@eeyore.com', password: 'test123', oAuth: 'test', roles: 'User' },
+        //     { userID: '4308113', userName: 'Bombasto', firstName: 'James', lastName: 'Polo', email: '4308113@eeyore.com', password: 'test123', oAuth: 'test', roles: 'User' },
+        //     { userID: '4308114', userName: 'Celeritas', firstName: 'Jack', lastName: 'Ripper', email: '4308114@eeyore.com', password: 'test123', oAuth: 'test', roles: 'User' },
+        //     { userID: '4308115', userName: 'Magneta', firstName: 'Jane', lastName: 'Doe', email: '4308115@eeyore.com', password: 'test123', oAuth: 'test', roles: 'User' }
+        // ];
+
         var populateUsers = [
-            { userID: '4308131', userName: '4308131', firstName: 'Sean', lastName: 'Lee', email: '4308131@eeyore.com', password: '940228', oAuth: 'test', roles: 'Admin' },
-            { userID: '4308111', userName: 'Mr. Nice', firstName: 'John', lastName: 'Marco', email: '4308111@eeyore.com', password: 'test123', oAuth: 'test', roles: 'User' },
-            { userID: '4308113', userName: 'Bombasto', firstName: 'James', lastName: 'Polo', email: '4308113@eeyore.com', password: 'test123', oAuth: 'test', roles: 'User' },
-            { userID: '4308114', userName: 'Celeritas', firstName: 'Jack', lastName: 'Ripper', email: '4308114@eeyore.com', password: 'test123', oAuth: 'test', roles: 'User' },
-            { userID: '4308115', userName: 'Magneta', firstName: 'Jane', lastName: 'Doe', email: '4308115@eeyore.com', password: 'test123', oAuth: 'test', roles: 'User' }
+            { name: 'Sean', username: '4308131', email: '4308131@eeyore.com', password: bcrypt.hashSync('testing', 8)},
+            { name: 'John', username: '4308111', email: '4308111@eeyore.com', password: bcrypt.hashSync('testing', 8)},
+            { name: 'James', username: '4308113', email: '4308113@eeyore.com', password: bcrypt.hashSync('testing', 8)},
+            { name: 'Jack', username: '4308114', email: '4308114@eeyore.com', password: bcrypt.hashSync('testing', 8)},
+            { name: 'Jane', username: '4308115', email: '4308115@eeyore.com', password: bcrypt.hashSync('testing', 8)}
         ];
 
+        var populateMerchants = [
+            { name: 'John & Jane Associates', description: 'This is a law firm.', classification: 'Lawyer', parentID: '', location:{geo: '', address: '', presence: '' }, services: []}
+            { name: "Jack's Realtor Agency", description: 'This is a real estate agency.', classification: 'Realtor', parentID: '', location:{geo: '', address: '', presence: '' }, services: []}
+            { name: "James' Construction Firm", description: 'This is a construction firm.', classification: 'Realtor', parentID: '', location:{geo: '', address: '', presence: '' }, services: []}
+        ];
+
+        // Merchant ID
+        // Name
+        // Description
+        // Business Classification (Realtor\Lawyer\etc)
+        // Parent Merchant (When linked to another merchant, this would be a branch of the parent merchant)
+        // Locations
+        // Address
+        // Geo Location
+        // Type of presence
+        // List of services
+        // Service Type
+        // Unit of sales (per unit, per hour, per day)
+
+
         var populateConversations = [
-            {conversationID: '001', users: ['4308131', '4308111'], shoppingCardID: '', topic: 'Test Conversation 1', messages:[{senderID: '4308131', content:"Hello!"}, {senderID: '4308111', content:"Hi!"}, {senderID: '4308131', content:"How are you?"}, {senderID: '4308111', content:"Good! You?"}]},
-            {conversationID: '002', users: ['4308131', '4308113'], shoppingCardID: '', topic: 'Test Conversation 2', messages:[{senderID: '4308131', content:"Hello!"}, {senderID: '4308113', content:"Hi!"}, {senderID: '4308131', content:"How are you?"}, {senderID: '4308113', content:"Good! You?"}]},
-            {conversationID: '003', users: ['4308131', '4308113'], shoppingCardID: '', topic: 'Test Conversation 3', messages:[{senderID: '4308111', content:"Hello!"}, {senderID: '4308113', content:"Hi!"}, {senderID: '4308111', content:"How are you?"}, {senderID: '4308113', content:"Good! You?"}]},
-            {conversationID: '004', users: ['4308131', '4308131'], shoppingCardID: '', topic: 'Test Conversation 4', messages:[{senderID: '4308111', content:"Hello!"}, {senderID: '4308131', content:"Hi!"}, {senderID: '4308111', content:"How are you?"}, {senderID: '4308131', content:"Good! You?"}]}
+            { users: ['4308131', '4308111'], shoppingCardID: '', topic: 'Test Conversation 1', messages:[{senderID: '4308131', content:"Hello!"}, {senderID: '4308111', content:"Hi!"}, {senderID: '4308131', content:"How are you?"}, {senderID: '4308111', content:"Good! You?"}]},
+            { users: ['4308131', '4308112'], shoppingCardID: '', topic: 'Test Conversation 2', messages:[{senderID: '4308131', content:"Hello!"}, {senderID: '4308113', content:"Hi!"}, {senderID: '4308131', content:"How are you?"}, {senderID: '4308113', content:"Good! You?"}]},
+            { users: ['4308131', '4308113'], shoppingCardID: '', topic: 'Test Conversation 3', messages:[{senderID: '4308111', content:"Hello!"}, {senderID: '4308113', content:"Hi!"}, {senderID: '4308111', content:"How are you?"}, {senderID: '4308113', content:"Good! You?"}]},
+            { users: ['4308131', '4308114'], shoppingCardID: '', topic: 'Test Conversation 4', messages:[{senderID: '4308111', content:"Hello!"}, {senderID: '4308131', content:"Hi!"}, {senderID: '4308111', content:"How are you?"}, {senderID: '4308131', content:"Good! You?"}]},
+            { users: ['4308113', '4308115'], shoppingCardID: '', topic: 'Test Conversation 5', messages:[{senderID: '4308113', content:"Hello!"}, {senderID: '4308115', content:"Hi!"}, {senderID: '4308113', content:"How are you?"}, {senderID: '4308115', content:"Good! You?"}]},
+            { users: ['4308111', '4308115'], shoppingCardID: '', topic: 'Test Conversation 6', messages:[{senderID: '4308111', content:"Hello!"}, {senderID: '4308115', content:"Hi!"}, {senderID: '4308111', content:"How are you?"}, {senderID: '4308115', content:"Good! You?"}]}
         ];
 
         // console.log(populateUsers);
@@ -220,9 +250,14 @@ io.on('connection', function (socket) {
         // console.log(data.conversation.content);
 
         // Conversation.findOneAndUpdate({ conversationID: conversationID }, { conversationID: 'jason bourne' }, options, callback)
-        Conversation.findOne({ conversationID: data.conversation.conversationID}, function (err, conversation) {
+        Conversation.findOne({ _id: data.conversation._id}, function (err, conversation) {
             conversation.messages.push(data.message);
             conversation.save();
+
+            console.log('data.conversation._id');
+            console.log(data.conversation._id);
+            console.log('data.conversation._id');
+
 
             io.emit('submitMessage-success', conversation);
 
@@ -243,6 +278,8 @@ io.on('connection', function (socket) {
         });
 
 
+
+
     })
 
     io.emit("conversations", Object.keys(conversations));
@@ -260,6 +297,39 @@ io.on('connection', function (socket) {
 
         });
         // io.emit("conversations", Object.keys(conversations));
+
+
+    })
+
+    socket.on('createNewConversation', function(data){
+        console.log('createNewConversation');
+        console.log(data);
+
+        var newConversation = new Conversation(data);
+
+        console.log(newConversation);
+        console.log('createNewConversation');
+
+        newConversation.save();
+
+        Conversation.find(function (err, conversations) {
+            if (err) return console.error(err);
+            io.emit("conversations", conversations);
+        });
+
+
+        // Conversation.find(function (err, conversations) {
+        //     if (err) return console.error(err);
+        //
+        //     // io.emit('getAllConversations-success', conversations);
+        //     // io.emit("conversations", Object.keys(conversations));
+        //     io.emit("conversations", conversations);
+        //
+        //     // console.log(conversations);
+        //     // console.log("loadConversations");
+        //
+        // });
+        // // io.emit("conversations", Object.keys(conversations));
 
 
     })

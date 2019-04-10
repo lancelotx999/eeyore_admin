@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Start New Conversation</h1>
+<div mat-dialog-content>
+    <p>Who would you like to talk to?</p>
+    <mat-form-field>
+        User ID:<input matInput [(ngModel)]="data.userID">
+        Topic:<input matInput [(ngModel)]="data.topic">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-button (click)="newConversation()">Ok</button>
+</div>

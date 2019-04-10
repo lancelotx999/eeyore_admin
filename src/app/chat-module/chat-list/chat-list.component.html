@@ -9,16 +9,16 @@
                     <b>{{user}}</b>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf='conversation.messages.length > 0'>
                 {{conversation.messages[conversation.messages.length - 1].content}}
+            </div>
+            <div class="row" *ngIf='conversation.messages.length == 0'>
+                Start Chatting!
             </div>
         </div>
     </div>
-</div>
-<div class="container">
-    <div class="row" *ngFor="let conversation of testConversations | async">
-        <div class="col-md-12">
-            test
-        </div>
+    <div class="row">
+        <!-- <button type="button" name="button">New Chat</button> -->
+        <button mat-raised-button (click)="openDialog()">New Chat</button>
     </div>
 </div>

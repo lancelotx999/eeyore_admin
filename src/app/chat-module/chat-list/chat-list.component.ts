@@ -1,10 +1,14 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { User } from '../../user';
 import { Conversation } from '../../conversation';
+import { Message } from '../../message';
 
 import { ChatService } from '../../chat.service';
+import { AlertService, AuthService } from '../../_services';
+
 
 @Component({
   selector: 'app-chat-list',
@@ -22,7 +26,7 @@ export class ChatListComponent implements OnInit {
 
     @Output() sendConversation = new EventEmitter<Conversation>();
 
-    constructor(private chatService: ChatService) { }
+    constructor(private chatService: ChatService, private authService: AuthService, public dialog: MatDialog) { }
 
     ngOnInit() {
         // this.populateDummyData();
@@ -44,7 +48,22 @@ export class ChatListComponent implements OnInit {
         this.chatService.loadConversations();
 
         this.conversationsObservable.subscribe((data: Conversation[]) => {
-            this.conversations = data;
+            var conversations = [];
+            var user = this.authService.currentUserValue;
+
+            // console.log('test');
+            // console.log(this.conversations);
+            // console.log(this.authService.currentUserValue);
+            // console.log(data);
+            // console.log('test');
+
+            data.forEach(function(d){
+                if(d.users.includes(user.username)){
+                    conversations.push(d);
+                }
+            })
+
+            this.conversations = conversations;
             // console.log('this.conversations');
             // console.log(data);
             // console.log(this.conversations);
@@ -73,24 +92,72 @@ export class ChatListComponent implements OnInit {
     }
 
     // selectedConversation: Conversation;
+
     selectConversation(conversation: Conversation): void {
         // this.selectedConversation = conversation;
 
         this.sendConversation.emit(conversation);
+        console.log(conversation);
         console.log('conversation emmited');
 
         // console.log(this.selectedConversation);
-        console.log(conversation);
     }
 
-    private docId() {
-        let text = '';
-        const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    openDialog(): void {
 
-        // for (let i = 0; i < 5; i++) {
-        //     text += possible.charAt(Math.floor(Math.random() * possible.length));
-        // }
 
-        return text;
+        const dialogRef = this.dialog.open(NewChatDialog, {
+            width: '250px',
+            data: { userID: '', topic: ''}
+        });
+
+        // dialogRef.afterClosed().subscribe(result => {
+        //     console.log('The dialog was closed');
+        //     this.animal = result;
+        // });
     }
+
+}
+export interface ChatDialogData {
+  userID: string;
+  topic: string;
+}
+
+@Component({
+    selector: 'new-chat-dialog',
+    templateUrl: 'new-chat-dialog.html',
+})
+export class NewChatDialog {
+
+    constructor(
+        public dialogRef: MatDialogRef<NewChatDialog>,
+        @Inject(MAT_DIALOG_DATA) public data: ChatDialogData,
+        private authService: AuthService,
+        private chatService: ChatService
+    ) {}
+
+    close(): void {
+        this.dialogRef.close();
+    }
+
+    newConversation(): void {
+        var newConversation = new Conversation();
+
+        newConversation.topic = this.data.topic;
+        newConversation.users = [];
+        newConversation.users.push(this.data.userID);
+        newConversation.users.push(this.authService.currentUserValue.username);
+        newConversation.messages = [];
+        newConversation.shoppingCardID = '';
+
+        this.chatService.createNewConversation(newConversation);
+
+        console.log(this.authService.currentUserValue);
+        console.log(newConversation);
+        // console.log(this.data);
+        // console.log(newConversation);
+
+        this.dialogRef.close();
+    }
+
 }

@@ -3,14 +3,11 @@ const mongoose = require('mongoose'), Schema = mongoose.Schema;
 // const Role = require('./role.model');
 
 const UserSchema = mongoose.Schema({
-    userID: String,
-    userName: String,
-    firstName: String,
-    lastName: String,
-    email: String,
-    password: String,
-    oAuth: String,
-    roles: String
+  		name: String,
+	username: String,
+	   email: String,
+	password: String,
+	   roles: [{ type: Schema.Types.ObjectId, ref: 'Role' }]
 });
 
 module.exports = mongoose.model('users', UserSchema);

@@ -9,6 +9,8 @@ import { User } from '../../user';
 import { Conversation } from '../../conversation';
 
 import { ChatService } from '../../chat.service';
+import { AlertService, AuthService } from '../../_services';
+
 
 @Component({
   selector: 'app-conversation',
@@ -29,10 +31,14 @@ export class ConversationComponent implements OnInit {
      // @Output() messageEvent = new EventEmitter<string>();
 
 
-    constructor(private chatService: ChatService) { }
+    constructor(private chatService: ChatService, private authService: AuthService) { }
 
     ngOnInit() {
         this.conversationsObservable = this.chatService.conversations;
+
+        // console.log('test');
+        // console.log(this.authService.currentUserValue);
+        // console.log('test');
 
         // this.loadConversations();
 
@@ -43,6 +49,10 @@ export class ConversationComponent implements OnInit {
         // console.log('this.conversations');
         // console.log('this.selectedConversation');
         // console.log(this.selectedConversation);
+
+        // public get currentUserValue(): User {
+        //    return this.currentUserSubject.value;
+        // }
     }
 
     // ngAfterViewInit() {
@@ -50,28 +60,34 @@ export class ConversationComponent implements OnInit {
     //     console.log(this.selectedConversation);
     // }
 
-    loadConversations(): void {
-        console.log('loadConversations Execute.');
-        this.chatService.loadConversations();
-
-        this.conversationsObservable.subscribe((data: Conversation[]) => {
-            this.conversations = data;
-            // console.log('this.conversations');
-            // console.log(data);
-            // console.log(this.conversations);
-            // console.log('this.conversations');
-        })
-    }
+    // loadConversations(): void {
+    //     console.log('loadConversations Execute.');
+    //     this.chatService.loadConversations();
+    //
+    //     console.log('test');
+    //     console.log(this.authService.currentUserValue);
+    //     console.log('test');
+    //
+    //     this.conversationsObservable.subscribe((data: Conversation[]) => {
+    //         this.conversations = data;
+    //         // console.log('this.conversations');
+    //         // console.log(data);
+    //         // console.log(this.conversations);
+    //         // console.log('this.conversations');
+    //     })
+    // }
 
     submitMessage(f: NgForm) {
+        console.log('!!!!!!!!!!!!!!!!!!!!!');
         console.log(f.value);  // { first: '', last: '' }
         console.log(f.valid);  // false
         console.log(this.selectedConversation);  // false
+        console.log('!!!!!!!!!!!!!!!!!!!!!');
 
 
         var message = new Object({
             content: f.value.message,
-            senderID: '4308131'
+            senderID: this.authService.currentUserValue.username
         })
 
         // var message = {};
@@ -81,9 +97,11 @@ export class ConversationComponent implements OnInit {
         this.chatService.submitMessage(message, this.selectedConversation)
             .subscribe((data: Conversation) => {
                 this.conversation = data;
-                console.log('baboon');
+
+                console.log('----------------------');
                 console.log(data);
-                console.log(this.conversation);
+                console.log(this.selectedConversation);
+                console.log('----------------------');
 
                 this.selectedConversation = this.conversation;
 
@@ -96,8 +114,6 @@ export class ConversationComponent implements OnInit {
                 // this.updateConversations.emit('updateConversations');
 
             });
-
-
 
         // socket.on('submitMessage-start' function(){
         //

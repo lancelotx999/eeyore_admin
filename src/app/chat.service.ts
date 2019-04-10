@@ -52,6 +52,7 @@ export class ChatService {
 
     }
 
+
     getAllConversations() {
         this.socket.emit('getAllConversations-start');
 
@@ -74,11 +75,23 @@ export class ChatService {
             message: message,
             conversation: conversation
         })
+        console.log('----------- chatService -----------');
+        console.log(data);
+        console.log('----------- chatService -----------');
 
         this.socket.emit('submitMessage-start', data);
 
         return this.socket.fromEvent('submitMessage-success')
             .pipe(map( conversation => conversation ));
+    }
+
+    createNewConversation(conversation: Object){
+        console.log("new conversation");
+        console.log(conversation);
+
+        this.socket.emit('createNewConversation', conversation);
+
+
     }
 
     // conversations: Conversation [] = [];
