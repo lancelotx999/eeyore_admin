@@ -2,9 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { ChatService } from '../../chat.service';
+import { ChatService } from '../../_services/chat.service';
 
-import { Conversation } from '../../conversation';
+import { User } from '../../_models/user';
+import { Conversation } from '../../_models/conversation';
 
 import { ConversationComponent } from "../conversation/conversation.component";
 import { ChatListComponent } from '../chat-list/chat-list.component';

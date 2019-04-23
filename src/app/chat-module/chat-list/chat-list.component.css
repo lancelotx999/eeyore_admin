@@ -1,0 +1,8 @@
+.borderDelete{
+    border: 1px solid;
+}
+
+.chatlist{
+    overflow-y: scroll;
+    height:400px;
+}

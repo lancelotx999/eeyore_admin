@@ -1,0 +1,26 @@
+.borderDelete{
+    border: 1px solid;
+}
+
+.chatbubble{
+    border-radius: 25px;
+    padding: 5px;
+    margin: 5px;
+}
+
+.chatscreen{
+    overflow-y: scroll;
+    height:400px;
+}
+
+.username{
+    font-size: 10px;
+}
+
+.sender{
+    background: #3e9b41;
+}
+
+.receiver{
+    background: #315e91;
+}

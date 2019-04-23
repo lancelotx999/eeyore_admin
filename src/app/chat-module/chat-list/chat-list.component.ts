@@ -1,12 +1,13 @@
 import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+// import { AngularMaterialModule } from '../mat.module';
 
-import { User } from '../../user';
-import { Conversation } from '../../conversation';
-import { Message } from '../../message';
+import { User } from '../../_models/user';
+import { Conversation } from '../../_models/conversation';
+import { Message } from '../../_models/message';
 
-import { ChatService } from '../../chat.service';
+import { ChatService } from '../../_services/chat.service';
 import { AlertService, AuthService } from '../../_services';
 
 
@@ -19,6 +20,7 @@ export class ChatListComponent implements OnInit {
     users: User [] = [];
     conversations: Conversation [] = [];
     selectedConversation: Conversation;
+    user: User;
 
     conversationsObservable: Observable<Conversation[]>;
     // currentDoc: string;
@@ -32,6 +34,9 @@ export class ChatListComponent implements OnInit {
         // this.populateDummyData();
         // this.getAllUsers();
         this.conversationsObservable = this.chatService.conversations;
+        this.user = this.authService.currentUserValue;
+
+        // console.log(this.user);
         // this._docSub = this.chatService.currentConversation.subscribe(doc => this.currentDoc = doc.id);
         this.loadConversations();
         // this.getAllConversations();
@@ -97,28 +102,22 @@ export class ChatListComponent implements OnInit {
         // this.selectedConversation = conversation;
 
         this.sendConversation.emit(conversation);
-        console.log(conversation);
-        console.log('conversation emmited');
+        // console.log(conversation);
+        // console.log('conversation emmited');
 
         // console.log(this.selectedConversation);
     }
 
-    openDialog(): void {
-
-
+    openNewChatDialog(): void {
         const dialogRef = this.dialog.open(NewChatDialog, {
             width: '250px',
             data: { userID: '', topic: ''}
         });
-
-        // dialogRef.afterClosed().subscribe(result => {
-        //     console.log('The dialog was closed');
-        //     this.animal = result;
-        // });
     }
 
 }
-export interface ChatDialogData {
+
+export interface NewChatDialogData {
   userID: string;
   topic: string;
 }
@@ -131,12 +130,12 @@ export class NewChatDialog {
 
     constructor(
         public dialogRef: MatDialogRef<NewChatDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: ChatDialogData,
+        @Inject(MAT_DIALOG_DATA) public data: NewChatDialogData,
         private authService: AuthService,
         private chatService: ChatService
     ) {}
 
-    close(): void {
+    cancel(): void {
         this.dialogRef.close();
     }
 

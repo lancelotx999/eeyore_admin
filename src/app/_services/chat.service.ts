@@ -3,9 +3,9 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { map, catchError, retry } from 'rxjs/operators';
 import { Socket } from 'ngx-socket-io';
 
-import { User } from './user';
-import { Conversation } from './conversation';
-import { Message } from './message';
+import { User } from '../user';
+import { Conversation } from '../_models/conversation';
+import { Message } from '../_models/message';
 
 @Injectable({
   providedIn: 'root'
@@ -42,10 +42,10 @@ export class ChatService {
 
     loadConversations(){
         this.socket.emit('loadConversations');
-        console.log('this.conversations');
-        console.log(this.conversations);
-        console.log(this.currentConversation);
-        console.log('this.conversations');
+        // console.log('this.conversations');
+        // console.log(this.conversations);
+        // console.log(this.currentConversation);
+        // console.log('this.conversations');
 
         return this.conversations.pipe(map( conversations => conversations ));
         // return this.currentConversation.pipe(map( conversations => conversations ));
@@ -75,13 +75,13 @@ export class ChatService {
             message: message,
             conversation: conversation
         })
-        console.log('----------- chatService -----------');
-        console.log(data);
-        console.log('----------- chatService -----------');
+        // console.log('----------- chatService -----------');
+        // console.log(data);
+        // console.log('----------- chatService -----------');
 
-        this.socket.emit('submitMessage-start', data);
+        this.socket.emit('submitMessage', data);
 
-        return this.socket.fromEvent('submitMessage-success')
+        return this.socket.fromEvent('updateConversation')
             .pipe(map( conversation => conversation ));
     }
 
@@ -92,6 +92,11 @@ export class ChatService {
         this.socket.emit('createNewConversation', conversation);
 
 
+    }
+
+    addUser(conversation: Object){
+        console.log("add user");
+        console.log(conversation);
     }
 
     // conversations: Conversation [] = [];

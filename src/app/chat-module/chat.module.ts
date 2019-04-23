@@ -18,6 +18,7 @@ import { MainChatComponent } from './main-chat/main-chat.component';
 import { ChatListComponent } from './chat-list/chat-list.component';
 import { ConversationComponent } from './conversation/conversation.component';
 import { NewChatDialog } from './chat-list/chat-list.component';
+import { AddUserDialog } from './conversation/conversation.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -26,7 +27,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     MainChatComponent,
     ChatListComponent,
     ConversationComponent,
-    NewChatDialog
+    NewChatDialog,
+    AddUserDialog
   ],
   imports: [
     CommonModule,
@@ -36,7 +38,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     SocketIoModule.forRoot(config),
     AngularMaterialModule
   ],
-  entryComponents: [NewChatDialog],
+  entryComponents: [NewChatDialog, AddUserDialog],
   providers: []
 })
 export class ChatModule { }

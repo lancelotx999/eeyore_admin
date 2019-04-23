@@ -149,9 +149,12 @@ io.on('connection', function (socket) {
         ];
 
         var populateMerchants = [
-            { name: 'John & Jane Associates', description: 'This is a law firm.', classification: 'Lawyer', parentID: '', location:{geo: '', address: '', presence: '' }, services: []}
-            { name: "Jack's Realtor Agency", description: 'This is a real estate agency.', classification: 'Realtor', parentID: '', location:{geo: '', address: '', presence: '' }, services: []}
-            { name: "James' Construction Firm", description: 'This is a construction firm.', classification: 'Realtor', parentID: '', location:{geo: '', address: '', presence: '' }, services: []}
+            { name: 'John & Jane Associates', description: 'This is a law firm.', classification: 'Lawyer', parentID: '', location:{geo: '', address: '', presence: '' }, services: []},
+            { name: "Jack's Realtor Agency", description: 'This is a real estate agency.', classification: 'Realtor', parentID: '', location:{geo: '', address: '', presence: '' }, services: []},
+            { name: "James' Construction Firm", description: 'This is a construction firm.', classification: 'Construction', parentID: '', location:{geo: '', address: '', presence: '' }, services: []},
+            { name: "Mario & Luigi Plumbing", description: 'We are plumbers.', classification: 'Maintenance/Repairs', parentID: '', location:{geo: '', address: '', presence: '' }, services: []},
+            { name: "Sparky's Electricians", description: 'We are electricians.', classification: 'Maintenance/Repairs', parentID: '', location:{geo: '', address: '', presence: '' }, services: []},
+            { name: "William's Construction Firm", description: 'This is a construction firm.', classification: 'Construction', parentID: '', location:{geo: '', address: '', presence: '' }, services: []}
         ];
 
         // Merchant ID
@@ -240,8 +243,8 @@ io.on('connection', function (socket) {
         });
     })
 
-    socket.on('submitMessage-start', function(data){
-        console.log('submitMessage-start started.');
+    socket.on('submitMessage', function(data){
+        console.log('submitMessage started.');
         // console.log(data);
         // console.log(data.conversation.message);
         //
@@ -254,14 +257,12 @@ io.on('connection', function (socket) {
             conversation.messages.push(data.message);
             conversation.save();
 
-            console.log('data.conversation._id');
-            console.log(data.conversation._id);
-            console.log('data.conversation._id');
+            // console.log('data.conversation._id');
+            // console.log(data.conversation._id);
+            // console.log('data.conversation._id');
 
 
-            io.emit('submitMessage-success', conversation);
-
-
+            io.emit('submitMessage', conversation);
 
         }).then(function(){
             Conversation.find(function (err, conversations) {
@@ -269,17 +270,12 @@ io.on('connection', function (socket) {
 
                 io.emit("conversations", conversations);
                 // console.log("conversations in then");
-
                 // console.log(users);
                 // console.log("getAllConversations-success emitted");
 
             });
 
         });
-
-
-
-
     })
 
     io.emit("conversations", Object.keys(conversations));
@@ -334,4 +330,37 @@ io.on('connection', function (socket) {
 
     })
 
+    socket.on('addUser', function(data){
+        console.log('addUser started.');
+        console.log(data);
+        // console.log(data.conversation.message);
+        //
+        // data.conversation.messages.push(data.message);
+        // console.log(data.message);
+        // console.log(data.conversation.content);
+
+        // Conversation.findOne({ _id: data.conversation._id}, function (err, conversation) {
+        //     conversation.messages.push(data.message);
+        //     conversation.save();
+        //
+        //     // console.log('data.conversation._id');
+        //     // console.log(data.conversation._id);
+        //     // console.log('data.conversation._id');
+        //
+        //
+        //     io.emit('addUser', conversation);
+        //
+        // }).then(function(){
+        //     Conversation.find(function (err, conversations) {
+        //         if (err) return console.error(err);
+        //
+        //         io.emit("conversations", conversations);
+        //         // console.log("conversations in then");
+        //         // console.log(users);
+        //         // console.log("getAllConversations-success emitted");
+        //
+        //     });
+        //
+        // });
+    })
 });
